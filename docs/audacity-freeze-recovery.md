@@ -1,30 +1,32 @@
-Audacity Freeze — Recovery Runbook (Linux)
+Audacity Freeze — Recovery & Cleanup Runbook (Linux)
 
-Dokumentasi penanganan Audacity yang freeze / Not Responding, terutama ketika freeze terjadi pada saat startup atau Automatic Crash Recovery.
+Dokumentasi penanganan Audacity freeze / Not Responding, terutama ketika freeze terjadi saat startup atau Automatic Crash Recovery.
 
-«PENTING: Jangan langsung menghapus ".aup3unsaved" atau ".aup3unsaved-wal". File tersebut dapat berisi data project yang belum tersimpan.»
+«⚠️ PENTING: Jangan langsung menghapus ".aup3unsaved" atau ".aup3unsaved-wal". File tersebut dapat berisi data project yang belum tersimpan.»
 
-1. Hentikan Audacity secara normal
+---
 
-Dari terminal:
+1. Hentikan Audacity Secara Normal
+
+Dari Terminal:
 
 pkill -TERM audacity
 
-Periksa:
+Periksa apakah Audacity masih berjalan:
 
 pgrep audacity
 
 Jika tidak ada output, Audacity sudah berhenti.
 
-Jangan langsung menggunakan "kill -9" apabila masih ada project recovery yang perlu diselamatkan.
+«Catatan: Jangan langsung menggunakan "kill -9" apabila masih ada project recovery yang perlu diselamatkan.»
 
 ---
 
-2. Backup recovery terlebih dahulu
+2. Backup Recovery Terlebih Dahulu
 
 Pada Linux, temporary recovery Audacity biasanya berada di:
 
-/var/tmp/audacity-<username>
+/var/tmp/audacity-
 
 Untuk user "nis":
 
@@ -36,33 +38,33 @@ Backup ini jangan dihapus sampai project yang dibutuhkan sudah berhasil diselama
 
 ---
 
-3. Jika Audacity freeze karena Automatic Crash Recovery
+3. Jika Freeze Terjadi Karena Automatic Crash Recovery
 
 Jika pola masalahnya:
 
 Audacity startup
-    ↓
+      ↓
 Welcome
-    ↓
+      ↓
 Project Recovery
-    ↓
+      ↓
 Not Responding / crash
 
-isolasi temporary recovery tanpa menghapusnya:
+Isolasi temporary recovery tanpa menghapusnya:
 
 mv /var/tmp/audacity-nis /var/tmp/audacity-nis.disabled
 
 Kemudian buka Audacity kembali dari desktop/XFCE.
 
-Hasil yang diharapkan
+Hasil yang Diharapkan
 
 Jika Audacity sekarang:
 
-- bisa membuka window,
-- Welcome dialog bisa ditutup,
-- project kosong bisa dibuat,
-- audio bisa di-import,
-- waveform bisa diedit,
+- bisa membuka window
+- Welcome dialog bisa ditutup
+- project kosong bisa dibuat
+- audio bisa di-import
+- waveform bisa diedit
 
 maka recovery session sebelumnya adalah tersangka utama.
 
@@ -73,11 +75,11 @@ Jangan hapus:
 
 ---
 
-4. Jangan langsung menganggap project recovery rusak
+4. Jangan Langsung Menganggap Project Recovery Rusak
 
-Recovery masih bisa dicoba secara manual.
+Recovery masih dapat dicoba secara manual.
 
-Audacity menggunakan file:
+Audacity menggunakan file seperti:
 
 .aup3unsaved
 .aup3unsaved-wal
@@ -86,13 +88,11 @@ untuk project yang belum tersimpan.
 
 Setelah Audacity sudah stabil, recovery dapat dilakukan dari salinan backup, bukan dari data asli.
 
-Dokumentasi resmi Audacity menyarankan menyalin seluruh temporary recovery folder sebelum melakukan recovery.
+«Dokumentasi resmi Audacity menyarankan menyalin seluruh temporary recovery folder sebelum melakukan recovery.»
 
 ---
 
-5. Jika konfigurasi Audacity juga dicurigai
-
-Reset konfigurasi Audacity.
+5. Jika Konfigurasi Audacity Juga Dicurigai
 
 Backup konfigurasi terlebih dahulu:
 
@@ -100,44 +100,50 @@ mv ~/.config/audacity ~/.config/audacity.backup-$(date +%F-%H%M%S)
 
 Kemudian jalankan Audacity kembali.
 
-Reset Preferences memang merupakan langkah troubleshooting resmi Audacity untuk kasus freeze, crash, atau perilaku yang tidak normal.
+Reset Preferences merupakan salah satu langkah troubleshooting untuk kasus freeze, crash, atau perilaku Audacity yang tidak normal.
 
-«Catatan: lokasi konfigurasi dapat berbeda menurut versi/package Audacity. Dokumentasi Audacity saat ini mendokumentasikan "audacity-data"/"audacity.cfg" untuk Linux, jadi cek lokasi konfigurasi versi yang digunakan sebelum menghapus file secara manual.»
+«Catatan: Lokasi konfigurasi dapat berbeda menurut versi/package Audacity. Dokumentasi Audacity saat ini mendokumentasikan "audacity-data" / "audacity.cfg" untuk Linux. Periksa lokasi konfigurasi versi/package yang digunakan sebelum menghapus file secara manual.»
 
 ---
 
-Emergency Procedure — Versi Singkat
+Emergency Procedure — Recovery Aman
 
 Jika produser sudah menunggu dan Audacity freeze:
 
 pkill -TERM audacity
 pgrep audacity
 
-Jika sudah berhenti:
+Jika Audacity sudah berhenti:
 
 cp -a /var/tmp/audacity-nis /var/tmp/audacity-nis.BACKUP
 
-Kemudian:
+Kemudian isolasi recovery:
 
 mv /var/tmp/audacity-nis /var/tmp/audacity-nis.disabled
 
 Buka Audacity kembali.
 
-Jika normal → lanjutkan pekerjaan menggunakan project/audio yang sudah tersimpan.
+Jika normal:
 
-Jangan hapus backup recovery.
+Audacity berhasil dibuka
+        ↓
+Recovery loop berhenti
+        ↓
+Project/audio dapat dikerjakan
+
+«Jangan hapus backup recovery sebelum memastikan project lama tidak diperlukan.»
 
 ---
 
-Apa yang dilakukan pada kasus "nis"
+6. Kasus yang Terverifikasi pada Mesin "nis"
 
-Kasus yang berhasil diperbaiki:
+Environment
 
 Audacity 3.2.4
 Debian GNU/Linux
 XFCE
 
-Gejala:
+Gejala
 
 Welcome dialog tidak merespons
         ↓
@@ -147,15 +153,23 @@ Project Recovery muncul
         ↓
 Audacity Not Responding / crash
 
-Tindakan:
+Tindakan
 
-1. pkill -TERM audacity
-2. Backup /var/tmp/audacity-nis
-3. Backup konfigurasi Audacity
-4. Rename recovery directory menjadi .disabled
-5. Start Audacity kembali
+pkill -TERM audacity
 
-Hasil:
+Backup recovery:
+
+cp -a /var/tmp/audacity-nis /var/tmp/audacity-nis.BACKUP
+
+Backup konfigurasi Audacity.
+
+Kemudian rename recovery directory:
+
+mv /var/tmp/audacity-nis /var/tmp/audacity-nis.disabled
+
+Start Audacity kembali.
+
+Hasil
 
 Welcome → OK berhasil
         ↓
@@ -169,46 +183,180 @@ Editing berjalan normal
         ↓
 Tidak freeze / crash
 
-Kesimpulan kasus
+Kesimpulan Kasus
 
-Workaround yang berhasil adalah:
+Workaround yang berhasil:
 
 mv /var/tmp/audacity-nis /var/tmp/audacity-nis.disabled
 
 setelah recovery directory dibackup terlebih dahulu.
 
-Ini bukan berarti sudah terbukti sebagai bug universal Audacity 3.2.4. Ini adalah workaround yang terverifikasi pada mesin tersebut.
+«Ini bukan berarti sudah terbukti sebagai bug universal Audacity 3.2.4. Ini adalah workaround yang terverifikasi pada mesin tersebut.»
 
 ---
 
-Aturan keselamatan data
+7. Aturan Keselamatan Data
 
-Jangan lakukan:
+Jangan lakukan
 
 rm -rf /var/tmp/audacity-nis
 
 sebelum recovery project dipastikan tidak diperlukan.
 
-Jangan pula menghapus:
+Jangan pula menghapus secara membabi buta:
 
 *.aup3unsaved
 *.aup3unsaved-wal
 
-secara membabi buta.
+Automatic Crash Recovery dibuat untuk mempertahankan pekerjaan setelah crash.
 
-Automatic Crash Recovery memang dibuat untuk mempertahankan pekerjaan setelah crash, dan Audacity memperingatkan bahwa data yang dibuang dari recovery dapat menjadi tidak dapat dipulihkan.
+Data yang dibuang dari recovery dapat menjadi tidak dapat dipulihkan.
 
 ---
 
-Setelah pekerjaan aman
+8. Setelah Pekerjaan Aman
 
-Setelah project sudah berhasil disimpan sebagai ".aup3", backup recovery yang tidak diperlukan lagi dapat dibersihkan.
+Setelah project berhasil disimpan sebagai:
 
-Sebelum membersihkan, pastikan:
+.aup3
+
+dan backup recovery sudah tidak diperlukan, recovery sementara dapat dibersihkan.
+
+Sebelum cleanup, pastikan:
 
 [ ] Project sudah tersimpan
 [ ] Audio hasil edit sudah benar
 [ ] Export final sudah tersedia
 [ ] Tidak ada pekerjaan yang hanya berada di .aup3unsaved
+[ ] Recovery backup tidak lagi diperlukan
 
 Baru kemudian lakukan cleanup.
+
+---
+
+9. FULL CLEANUP — Hapus Recovery & Reset Konfigurasi
+
+«⚠️ DESTRUCTIVE PROCEDURE
+
+Gunakan bagian ini hanya jika recovery lama sudah tidak diperlukan dan memang ingin membersihkan Audacity sampai kondisi fresh.
+
+Prosedur ini tidak membuat backup dan dapat menghapus data recovery yang masih diperlukan.»
+
+9.1 Matikan Audacity dan Hapus Recovery
+
+pkill -9 audacity
+rm -rf /var/tmp/audacity-$(whoami)*
+
+Verifikasi
+
+Jalankan:
+
+ls /var/tmp/audacity-$(whoami)
+
+Jika muncul:
+
+No such file or directory
+
+maka directory recovery tersebut sudah tidak ada.
+
+«⚠️ Perhatian: "rm -rf" bersifat destruktif. Pastikan tidak ada project yang masih hanya tersimpan di temporary recovery.»
+
+---
+
+9.2 Reset Total Konfigurasi Audacity
+
+Hapus konfigurasi:
+
+rm -rf ~/.config/audacity
+
+Verifikasi
+
+ls ~/.config/audacity
+
+Jika muncul:
+
+No such file or directory
+
+maka directory konfigurasi tersebut sudah terhapus.
+
+«Lokasi konfigurasi dapat berbeda tergantung versi/package Audacity. Gunakan langkah ini hanya jika "~/.config/audacity" memang merupakan konfigurasi Audacity yang digunakan pada sistem tersebut.»
+
+---
+
+9.3 Jalankan Audacity Kembali
+
+audacity
+
+Hasil yang Diharapkan
+
+Audacity akan berjalan dengan konfigurasi yang telah di-reset.
+
+Tidak ada lagi:
+
+Temporary Recovery
+        ↓
+Project Recovery
+        ↓
+Freeze / Not Responding
+
+Audacity seharusnya dapat dimulai seperti konfigurasi baru.
+
+---
+
+10. Quick Reference
+
+Recovery Aman
+
+pkill -TERM audacity
+cp -a /var/tmp/audacity-nis /var/tmp/audacity-nis.BACKUP
+mv /var/tmp/audacity-nis /var/tmp/audacity-nis.disabled
+
+Reset Konfigurasi dengan Backup
+
+mv ~/.config/audacity ~/.config/audacity.backup-$(date +%F-%H%M%S)
+
+Full Cleanup — Tanpa Backup
+
+pkill -9 audacity
+rm -rf /var/tmp/audacity-$(whoami)*
+rm -rf ~/.config/audacity
+audacity
+
+---
+
+Decision Flow
+
+Audacity freeze
+      │
+      ▼
+Masih ada recovery penting?
+      │
+ ┌────┴────┐
+ │         │
+YA        TIDAK
+ │         │
+ ▼         ▼
+BACKUP    FULL CLEANUP
+ │         │
+ ▼         ▼
+Isolasi   Hapus recovery
+recovery  Reset config
+ │         │
+ ▼         ▼
+Test      Start Audacity
+Audacity
+ │
+ ▼
+Recovery manual jika diperlukan
+
+---
+
+Prinsip Utama
+
+RECOVERY PENTING?
+      │
+      ├── YA → BACKUP → ISOLASI → RECOVERY MANUAL
+      │
+      └── TIDAK → CLEANUP TOTAL → RESET CONFIG → START FRESH
+
+Jangan mengorbankan data recovery hanya untuk memperbaiki freeze. Pastikan pekerjaan sudah aman terlebih dahulu sebelum menggunakan prosedur destructive cleanup.
